@@ -1,9 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MetricCard } from "@/components/Dashboard/MetricCard";
 import { CashFlowChart } from "@/components/Dashboard/CashFlowChart";
 import { TransactionsTable } from "@/components/Dashboard/TransactionsTable";
-import { EntityFilter } from "@/components/Dashboard/EntityFilter";
-import { CashFlowProjectionDrawer } from "@/components/Dashboard/CashFlowProjectionDrawer";
+import { DashboardHeader } from "@/components/Dashboard/DashboardHeader";
+import { MetricsOverview } from "@/components/Dashboard/MetricsOverview";
 import { useState } from "react";
 
 const mockHierarchicalData = {
@@ -48,40 +47,13 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="space-y-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-primary">Corporate Cash Flow Forecast</h1>
-            <p className="text-muted-foreground">Monitor and predict your organization's cash position across all entities</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <EntityFilter
-              selectedEntityId={selectedEntityId}
-              onEntityChange={setSelectedEntityId}
-              rootEntity={mockHierarchicalData.rootEntity}
-            />
-            <CashFlowProjectionDrawer />
-          </div>
-        </div>
+        <DashboardHeader
+          selectedEntityId={selectedEntityId}
+          onEntityChange={setSelectedEntityId}
+          rootEntity={mockHierarchicalData.rootEntity}
+        />
 
-        <div className="grid gap-4 md:grid-cols-3">
-          <MetricCard
-            title="Global Cash Position"
-            value="$2,534,500"
-            trend={2.5}
-            entityName="ABC Global"
-          />
-          <MetricCard
-            title="European Operations"
-            value="$858,000"
-            trend={10}
-            entityName="ABC Europe"
-          />
-          <MetricCard
-            title="90-Day Global Forecast"
-            value="$2,995,000"
-            trend={25.8}
-          />
-        </div>
+        <MetricsOverview />
 
         <Card>
           <CardHeader>
