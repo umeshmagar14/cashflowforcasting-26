@@ -8,31 +8,33 @@ const Index = () => {
     <div className="min-h-screen bg-background p-8">
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-primary">Cash Flow Forecast</h1>
-          <p className="text-muted-foreground">Monitor and predict your company's cash position</p>
+          <h1 className="text-3xl font-bold text-primary">Corporate Cash Flow Forecast</h1>
+          <p className="text-muted-foreground">Monitor and predict your organization's cash position across all entities</p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
           <MetricCard
-            title="Current Cash Position"
-            value="$234,500"
+            title="Global Cash Position"
+            value="$2,534,500"
             trend={2.5}
+            entityName="ABC Global"
           />
           <MetricCard
-            title="30-Day Forecast"
-            value="$258,000"
+            title="European Operations"
+            value="$858,000"
             trend={10}
+            entityName="ABC Europe"
           />
           <MetricCard
-            title="90-Day Forecast"
-            value="$295,000"
+            title="90-Day Global Forecast"
+            value="$2,995,000"
             trend={25.8}
           />
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Cash Flow Forecast</CardTitle>
+            <CardTitle>Consolidated Cash Flow Forecast</CardTitle>
           </CardHeader>
           <CardContent>
             <CashFlowChart />
@@ -41,7 +43,7 @@ const Index = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Upcoming Transactions</CardTitle>
+            <CardTitle>Upcoming Transactions Across Entities</CardTitle>
           </CardHeader>
           <CardContent>
             <TransactionsTable />

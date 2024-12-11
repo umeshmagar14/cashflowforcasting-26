@@ -6,6 +6,43 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Entity } from "@/types/accountTypes";
+
+const mockHierarchicalData = {
+  id: "corp1",
+  name: "ABC Corporation",
+  type: "corporate" as const,
+  rootEntity: {
+    id: "root1",
+    name: "ABC Global",
+    type: "subsidiary" as const,
+    accounts: [
+      {
+        id: "acc1",
+        name: "Main Operating Account",
+        type: "checking" as const,
+        balance: 1500000,
+        currency: "USD",
+      }
+    ],
+    subEntities: [
+      {
+        id: "sub1",
+        name: "ABC Europe",
+        type: "division" as const,
+        accounts: [
+          {
+            id: "acc2",
+            name: "European Operations",
+            type: "checking" as const,
+            balance: 800000,
+            currency: "EUR",
+          }
+        ]
+      }
+    ]
+  }
+};
 
 const mockTransactions = [
   {
@@ -14,6 +51,8 @@ const mockTransactions = [
     description: "Client Payment - ABC Corp",
     type: "receivable",
     amount: 15000,
+    entityId: "root1",
+    accountId: "acc1"
   },
   {
     id: 2,
@@ -21,6 +60,8 @@ const mockTransactions = [
     description: "Supplier Invoice - XYZ Ltd",
     type: "payable",
     amount: 8500,
+    entityId: "sub1",
+    accountId: "acc2"
   },
   {
     id: 3,
@@ -28,8 +69,21 @@ const mockTransactions = [
     description: "Client Payment - DEF Inc",
     type: "receivable",
     amount: 12000,
+    entityId: "root1",
+    accountId: "acc1"
   },
 ];
+
+const findEntityName = (entityId: string, root: Entity): string => {
+  if (root.id === entityId) return root.name;
+  
+  for (const subEntity of root.subEntities || []) {
+    const found = findEntityName(entityId, subEntity);
+    if (found) return found;
+  }
+  
+  return "Unknown Entity";
+};
 
 export const TransactionsTable = () => {
   return (
@@ -37,6 +91,7 @@ export const TransactionsTable = () => {
       <TableHeader>
         <TableRow>
           <TableHead>Date</TableHead>
+          <TableHead>Entity</TableHead>
           <TableHead>Description</TableHead>
           <TableHead>Type</TableHead>
           <TableHead className="text-right">Amount</TableHead>
@@ -46,6 +101,9 @@ export const TransactionsTable = () => {
         {mockTransactions.map((transaction) => (
           <TableRow key={transaction.id}>
             <TableCell>{transaction.date}</TableCell>
+            <TableCell>
+              {findEntityName(transaction.entityId, mockHierarchicalData.rootEntity)}
+            </TableCell>
             <TableCell>{transaction.description}</TableCell>
             <TableCell>
               <span
