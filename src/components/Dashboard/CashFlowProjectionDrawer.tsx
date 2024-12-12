@@ -24,15 +24,22 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface Account {
   id: string;
   name: string;
+  type: 'operating' | 'investment' | 'reserve';
 }
 
 const mockAccounts: Account[] = [
-  { id: "acc1", name: "Main Operating Account" },
-  { id: "acc2", name: "European Operations" },
+  { id: "acc1", name: "Main Operating Account", type: 'operating' },
+  { id: "acc2", name: "European Operations", type: 'operating' },
+  { id: "acc3", name: "Investment Portfolio A", type: 'investment' },
+  { id: "acc4", name: "Investment Portfolio B", type: 'investment' },
+  { id: "acc5", name: "Emergency Reserve", type: 'reserve' },
+  { id: "acc6", name: "Strategic Reserve", type: 'reserve' },
 ];
 
 export const CashFlowProjectionDrawer = () => {
@@ -50,6 +57,14 @@ export const CashFlowProjectionDrawer = () => {
 
   const today = new Date();
 
+  const groupedAccounts = mockAccounts.reduce((acc, account) => {
+    if (!acc[account.type]) {
+      acc[account.type] = [];
+    }
+    acc[account.type].push(account);
+    return acc;
+  }, {} as Record<string, Account[]>);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -66,20 +81,29 @@ export const CashFlowProjectionDrawer = () => {
           </SheetDescription>
         </SheetHeader>
         <form onSubmit={handleSubmit} className="space-y-6 pt-6">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Account</label>
-            <Select value={selectedAccount} onValueChange={setSelectedAccount}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select account" />
-              </SelectTrigger>
-              <SelectContent>
-                {mockAccounts.map((account) => (
-                  <SelectItem key={account.id} value={account.id}>
-                    {account.name}
-                  </SelectItem>
+          <div className="space-y-4">
+            <Label className="text-sm font-medium">Select Account</Label>
+            <RadioGroup value={selectedAccount} onValueChange={setSelectedAccount}>
+              <div className="space-y-6">
+                {Object.entries(groupedAccounts).map(([type, accounts]) => (
+                  <div key={type} className="space-y-2">
+                    <h4 className="font-medium capitalize text-sm text-muted-foreground">
+                      {type} Accounts
+                    </h4>
+                    <div className="grid gap-2">
+                      {accounts.map((account) => (
+                        <div key={account.id} className="flex items-center space-x-2">
+                          <RadioGroupItem value={account.id} id={account.id} />
+                          <Label htmlFor={account.id} className="font-normal">
+                            {account.name}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 ))}
-              </SelectContent>
-            </Select>
+              </div>
+            </RadioGroup>
           </div>
 
           <div className="space-y-2">
