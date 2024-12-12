@@ -25,7 +25,9 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#1E3A8A",
+          DEFAULT: "#1E3A8A", // Deep blue
+          light: "#60A5FA", // Light blue
+          dark: "#1E40AF", // Darker blue
           foreground: "#FFFFFF",
         },
         secondary: {
@@ -45,8 +47,22 @@ export default {
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "#3B82F6", // Bright blue
+          light: "#93C5FD", // Very light blue
+          dark: "#2563EB", // Deep blue
+          foreground: "#FFFFFF",
+        },
+        blue: {
+          50: "#EFF6FF",
+          100: "#DBEAFE",
+          200: "#BFDBFE",
+          300: "#93C5FD",
+          400: "#60A5FA",
+          500: "#3B82F6",
+          600: "#2563EB",
+          700: "#1D4ED8",
+          800: "#1E40AF",
+          900: "#1E3A8A",
         },
       },
       borderRadius: {
