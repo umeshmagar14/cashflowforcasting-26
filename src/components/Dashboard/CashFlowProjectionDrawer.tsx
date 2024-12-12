@@ -25,16 +25,27 @@ import { cn } from "@/lib/utils";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
+interface Account {
+  id: string;
+  name: string;
+}
+
+const mockAccounts: Account[] = [
+  { id: "acc1", name: "Main Operating Account" },
+  { id: "acc2", name: "European Operations" },
+];
+
 export const CashFlowProjectionDrawer = () => {
   const [date, setDate] = useState<Date>();
   const [amount, setAmount] = useState("");
   const [type, setType] = useState<"payable" | "receivable">("receivable");
   const [description, setDescription] = useState("");
+  const [selectedAccount, setSelectedAccount] = useState<string>("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Form submission logic will be added in future iterations
-    console.log({ date, amount, type, description });
+    console.log({ date, amount, type, description, accountId: selectedAccount });
   };
 
   const today = new Date();
@@ -55,6 +66,22 @@ export const CashFlowProjectionDrawer = () => {
           </SheetDescription>
         </SheetHeader>
         <form onSubmit={handleSubmit} className="space-y-6 pt-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Account</label>
+            <Select value={selectedAccount} onValueChange={setSelectedAccount}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select account" />
+              </SelectTrigger>
+              <SelectContent>
+                {mockAccounts.map((account) => (
+                  <SelectItem key={account.id} value={account.id}>
+                    {account.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="space-y-2">
             <label className="text-sm font-medium">Type</label>
             <Select value={type} onValueChange={(value: "payable" | "receivable") => setType(value)}>
