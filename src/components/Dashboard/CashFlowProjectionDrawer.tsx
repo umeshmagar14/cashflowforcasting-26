@@ -9,6 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { AccountSelection } from "./CashFlowProjection/AccountSelection";
@@ -56,31 +57,33 @@ export const CashFlowProjectionDrawer = () => {
             Add manual cash flow projections to improve forecast accuracy.
           </SheetDescription>
         </SheetHeader>
-        <form onSubmit={handleSubmit} className="space-y-6 pt-6">
-          <AccountSelection
-            selectedAccount={selectedAccount}
-            onAccountChange={setSelectedAccount}
-            accounts={mockAccounts}
-          />
-          
-          <ProjectionForm
-            date={date}
-            setDate={setDate}
-            amount={amount}
-            setAmount={setAmount}
-            type={type}
-            setType={setType}
-            description={description}
-            setDescription={setDescription}
-          />
+        <ScrollArea className="h-[calc(100vh-12rem)] pr-4">
+          <form onSubmit={handleSubmit} className="space-y-6 pt-6">
+            <AccountSelection
+              selectedAccount={selectedAccount}
+              onAccountChange={setSelectedAccount}
+              accounts={mockAccounts}
+            />
+            
+            <ProjectionForm
+              date={date}
+              setDate={setDate}
+              amount={amount}
+              setAmount={setAmount}
+              type={type}
+              setType={setType}
+              description={description}
+              setDescription={setDescription}
+            />
 
-          <SheetFooter>
-            <Button type="submit">Save projection</Button>
-            <SheetClose asChild>
-              <Button variant="outline" type="button">Cancel</Button>
-            </SheetClose>
-          </SheetFooter>
-        </form>
+            <SheetFooter>
+              <Button type="submit">Save projection</Button>
+              <SheetClose asChild>
+                <Button variant="outline" type="button">Cancel</Button>
+              </SheetClose>
+            </SheetFooter>
+          </form>
+        </ScrollArea>
       </SheetContent>
     </Sheet>
   );
