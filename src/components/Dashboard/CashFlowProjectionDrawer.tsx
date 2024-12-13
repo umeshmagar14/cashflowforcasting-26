@@ -37,6 +37,7 @@ export const CashFlowProjectionDrawer = () => {
   const [type, setType] = useState<"payable" | "receivable">("receivable");
   const [description, setDescription] = useState("");
   const [selectedAccount, setSelectedAccount] = useState<string>("");
+  const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -69,16 +70,17 @@ export const CashFlowProjectionDrawer = () => {
       description: "Cash flow projection saved successfully",
     });
 
-    // Reset form
+    // Reset form and close drawer
     setDate(undefined);
     setAmount("");
     setType("receivable");
     setDescription("");
     setSelectedAccount("");
+    setIsOpen(false);
   };
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button variant="outline" className="gap-2">
           <PlusCircle className="h-4 w-4" />
