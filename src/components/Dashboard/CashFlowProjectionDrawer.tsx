@@ -14,6 +14,7 @@ import { PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { AccountSelection } from "./CashFlowProjection/AccountSelection";
 import { ProjectionForm } from "./CashFlowProjection/ProjectionForm";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Account {
   id: string;
@@ -36,10 +37,44 @@ export const CashFlowProjectionDrawer = () => {
   const [type, setType] = useState<"payable" | "receivable">("receivable");
   const [description, setDescription] = useState("");
   const [selectedAccount, setSelectedAccount] = useState<string>("");
+  const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ date, amount, type, description, accountId: selectedAccount });
+
+    // Validate required fields
+    if (!date || !amount || !selectedAccount || !description) {
+      toast({
+        variant: "destructive",
+        title: "Validation Error",
+        description: "Please fill in all required fields",
+      });
+      return;
+    }
+
+    // Process form submission
+    const formData = {
+      date,
+      amount: parseFloat(amount),
+      type,
+      description,
+      accountId: selectedAccount,
+    };
+
+    console.log("Form submitted:", formData);
+    
+    // Show success message
+    toast({
+      title: "Success",
+      description: "Cash flow projection saved successfully",
+    });
+
+    // Reset form
+    setDate(undefined);
+    setAmount("");
+    setType("receivable");
+    setDescription("");
+    setSelectedAccount("");
   };
 
   return (

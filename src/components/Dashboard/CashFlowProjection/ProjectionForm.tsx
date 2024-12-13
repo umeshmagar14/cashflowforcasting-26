@@ -35,6 +35,8 @@ export const ProjectionForm = ({
   setDescription,
 }: ProjectionFormProps) => {
   const today = new Date();
+  const futureDate = new Date();
+  futureDate.setFullYear(today.getFullYear() + 1); // Allow dates up to 1 year in the future
 
   return (
     <>
@@ -66,12 +68,14 @@ export const ProjectionForm = ({
               {date ? format(date, "PPP") : <span>Pick a date</span>}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
+          <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               mode="single"
               selected={date}
               onSelect={setDate}
-              disabled={(date) => date > today}
+              disabled={(date) => date < today}
+              fromDate={today}
+              toDate={futureDate}
               initialFocus
             />
           </PopoverContent>
@@ -87,6 +91,7 @@ export const ProjectionForm = ({
           placeholder="Enter amount"
           min="0"
           step="0.01"
+          required
         />
       </div>
 
@@ -96,6 +101,7 @@ export const ProjectionForm = ({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Enter description"
+          required
         />
       </div>
     </>
