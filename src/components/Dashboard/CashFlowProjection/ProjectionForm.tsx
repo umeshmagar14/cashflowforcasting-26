@@ -60,7 +60,7 @@ export const ProjectionForm = ({
             <Button
               variant={"outline"}
               className={cn(
-                "w-full justify-start text-left font-normal",
+                "w-full justify-start text-left font-normal bg-dropdown",
                 !date && "text-muted-foreground"
               )}
             >
@@ -68,7 +68,7 @@ export const ProjectionForm = ({
               {date ? format(date, "PPP") : <span>Pick a date</span>}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
+          <PopoverContent className="w-auto p-0 bg-white">
             <Calendar
               mode="single"
               selected={date}
@@ -79,6 +79,7 @@ export const ProjectionForm = ({
                 return date < currentDate;
               }}
               initialFocus
+              className="bg-white rounded-md border"
             />
           </PopoverContent>
         </Popover>
@@ -94,6 +95,7 @@ export const ProjectionForm = ({
           min="0"
           step="0.01"
           required
+          className="bg-dropdown"
         />
       </div>
 
@@ -104,6 +106,7 @@ export const ProjectionForm = ({
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Enter description"
           required
+          className="bg-dropdown"
         />
       </div>
     </>
