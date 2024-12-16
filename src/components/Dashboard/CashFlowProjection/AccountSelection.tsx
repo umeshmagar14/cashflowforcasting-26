@@ -38,10 +38,10 @@ export const AccountSelection = ({
     <div className="space-y-2">
       <Label className="text-sm font-medium">Select Account</Label>
       <Select value={selectedAccount} onValueChange={onAccountChange}>
-        <SelectTrigger>
+        <SelectTrigger className="bg-dropdown">
           <SelectValue placeholder="Select an account" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-dropdown-panel">
           {Object.entries(groupedAccounts).map(([type, accounts]) => (
             <SelectGroup key={type}>
               <SelectLabel className="capitalize">{type} Accounts</SelectLabel>
