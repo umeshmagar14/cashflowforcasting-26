@@ -41,12 +41,12 @@ export const AccountSelection = ({
         <SelectTrigger className="bg-dropdown">
           <SelectValue placeholder="Select an account" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-white">
           {Object.entries(groupedAccounts).map(([type, accounts]) => (
             <SelectGroup key={type}>
               <SelectLabel className="capitalize">{type} Accounts</SelectLabel>
               {accounts.map((account) => (
-                <SelectItem key={account.id} value={account.id}>
+                <SelectItem key={account.id} value={account.id} className="bg-white hover:bg-gray-100">
                   {account.name}
                 </SelectItem>
               ))}
