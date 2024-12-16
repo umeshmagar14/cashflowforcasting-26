@@ -43,12 +43,12 @@ export const ProjectionForm = ({
       <div className="space-y-2">
         <label className="text-sm font-medium">Type</label>
         <Select value={type} onValueChange={(value: "payable" | "receivable") => setType(value)}>
-          <SelectTrigger>
+          <SelectTrigger className="bg-dropdown">
             <SelectValue placeholder="Select type" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="receivable">Receivable</SelectItem>
-            <SelectItem value="payable">Payable</SelectItem>
+          <SelectContent className="bg-white">
+            <SelectItem value="receivable" className="bg-white hover:bg-gray-100">Receivable</SelectItem>
+            <SelectItem value="payable" className="bg-white hover:bg-gray-100">Payable</SelectItem>
           </SelectContent>
         </Select>
       </div>
