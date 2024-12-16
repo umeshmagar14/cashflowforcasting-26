@@ -54,7 +54,6 @@ export default {
         },
         dropdown: {
           DEFAULT: "#F1F0FB", // Light background for dropdown fields
-          panel: "#E5DEFF", // Soft purple for dropdown panels
         },
         blue: {
           50: "#EFF6FF",
