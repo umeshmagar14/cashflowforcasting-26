@@ -1,9 +1,21 @@
 import { Button } from "@/components/ui/button";
-import { LogOut, User } from "lucide-react";
+import { Bell, LogOut, User } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 
 export const Navbar = () => {
   // Mock user data - in a real app, this would come from your auth system
   const username = "John Doe";
+  const notifications = [
+    { id: 1, message: "New transaction recorded" },
+    { id: 2, message: "Cash flow forecast updated" },
+    { id: 3, message: "Account balance alert" },
+  ];
 
   const handleLogout = () => {
     // Add logout logic here
@@ -28,15 +40,39 @@ export const Navbar = () => {
           </div>
         </div>
 
-        {/* Logout Button */}
-        <Button
-          variant="outline"
-          onClick={handleLogout}
-          className="flex items-center gap-2"
-        >
-          <LogOut className="h-4 w-4" />
-          Logout
-        </Button>
+        <div className="flex items-center gap-4">
+          {/* Notifications */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="relative">
+                <Bell className="h-5 w-5" />
+                <Badge 
+                  variant="destructive" 
+                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0"
+                >
+                  {notifications.length}
+                </Badge>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-80">
+              {notifications.map((notification) => (
+                <DropdownMenuItem key={notification.id} className="p-3">
+                  {notification.message}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Logout Button */}
+          <Button
+            variant="outline"
+            onClick={handleLogout}
+            className="flex items-center gap-2"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
+          </Button>
+        </div>
       </div>
     </nav>
   );
