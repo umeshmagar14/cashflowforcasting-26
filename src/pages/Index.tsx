@@ -5,6 +5,7 @@ import { DashboardHeader } from "@/components/Dashboard/DashboardHeader";
 import { MetricsOverview } from "@/components/Dashboard/MetricsOverview";
 import { CashFlowTable } from "@/components/Dashboard/CashFlowTable";
 import { ForecastControls } from "@/components/Dashboard/ForecastControls";
+import { Navbar } from "@/components/Navbar/Navbar";
 import { useState } from "react";
 
 const mockHierarchicalData = {
@@ -54,42 +55,45 @@ const Index = () => {
   const [selectedAccounts, setSelectedAccounts] = useState<string[]>([mockAccounts[0].id]);
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="space-y-8">
-        <DashboardHeader
-          selectedEntityId={selectedEntityId}
-          onEntityChange={setSelectedEntityId}
-          rootEntity={mockHierarchicalData.rootEntity}
-        />
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-background p-8 pt-24">
+        <div className="space-y-8">
+          <DashboardHeader
+            selectedEntityId={selectedEntityId}
+            onEntityChange={setSelectedEntityId}
+            rootEntity={mockHierarchicalData.rootEntity}
+          />
 
-        <MetricsOverview />
+          <MetricsOverview />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Consolidated Cash Flow Forecast</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ForecastControls
-              view={view}
-              onViewChange={setView}
-              selectedAccounts={selectedAccounts}
-              onAccountsChange={setSelectedAccounts}
-              accounts={mockAccounts}
-            />
-            {view === "chart" ? <CashFlowChart /> : <CashFlowTable />}
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Consolidated Cash Flow Forecast</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ForecastControls
+                view={view}
+                onViewChange={setView}
+                selectedAccounts={selectedAccounts}
+                onAccountsChange={setSelectedAccounts}
+                accounts={mockAccounts}
+              />
+              {view === "chart" ? <CashFlowChart /> : <CashFlowTable />}
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Upcoming Transactions Across Entities</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <TransactionsTable />
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Upcoming Transactions Across Entities</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <TransactionsTable />
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
