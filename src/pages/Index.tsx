@@ -57,8 +57,8 @@ const Index = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-background pt-[84px] p-8">
-        <div className="space-y-8">
+      <div className="min-h-screen bg-background pt-[120px] p-8">
+        <div className="max-w-7xl mx-auto space-y-10">
           <DashboardHeader
             selectedEntityId={selectedEntityId}
             onEntityChange={setSelectedEntityId}
