@@ -29,6 +29,8 @@ export default {
           light: "#60A5FA", // Light blue
           dark: "#1E40AF", // Darker blue
           foreground: "#FFFFFF",
+          800: "#1E40AF", // Hover state for buttons
+          900: "#1E3A8A", // Top banner background
         },
         secondary: {
           DEFAULT: "#64748B",
