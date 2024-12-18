@@ -70,17 +70,6 @@ export const Navbar = () => {
         </div>
       </div>
 
-      {/* Middle white section with logo */}
-      <div className="bg-white px-4 py-3 border-b">
-        <div className="max-w-7xl mx-auto">
-          <img
-            src="/lovable-uploads/f6684796-1998-4c5f-b350-b4c83b3971c6.png"
-            alt="Fifth Third Direct"
-            className="h-8"
-          />
-        </div>
-      </div>
-
       {/* Bottom light gray section */}
       <div className="bg-gray-100 px-4 py-2 border-b">
         <div className="max-w-7xl mx-auto">

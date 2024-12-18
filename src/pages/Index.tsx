@@ -57,7 +57,7 @@ const Index = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-background p-8 pt-24">
+      <div className="min-h-screen bg-background pt-[84px] p-8">
         <div className="space-y-8">
           <DashboardHeader
             selectedEntityId={selectedEntityId}
