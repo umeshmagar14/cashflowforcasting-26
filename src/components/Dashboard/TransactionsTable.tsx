@@ -1,18 +1,9 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody } from "@/components/ui/table";
 import { Entity } from "@/types/accountTypes";
 import { useTransactionStore } from "@/store/transactionStore";
-import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
-import { TransactionForm } from "./TransactionManagement/TransactionForm";
+import { TransactionFilters } from "./TransactionList/TransactionFilters";
+import { TransactionListItem } from "./TransactionList/TransactionListItem";
 
 const mockHierarchicalData = {
   id: "corp1",
@@ -62,7 +53,7 @@ const findEntityName = (entityId: string, root: Entity): string => {
 };
 
 export const TransactionsTable = () => {
-  const { transactions, toggleTransactionStatus, updateTransaction } = useTransactionStore();
+  const { transactions, toggleTransactionStatus } = useTransactionStore();
   const [filters, setFilters] = useState({
     date: "",
     entity: "",
@@ -70,7 +61,6 @@ export const TransactionsTable = () => {
     type: "",
     amount: "",
   });
-  const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
   
   // Sort transactions by date in descending order (most recent first)
   const filteredTransactions = [...transactions]
@@ -87,128 +77,41 @@ export const TransactionsTable = () => {
       );
     });
 
-  const handleSubmit = (data: any) => {
-    const transactionData = {
-      ...data,
-      amount: Number(data.amount),
-      entityId: selectedTransaction.entityId,
-      accountId: selectedTransaction.accountId,
-      isActive: selectedTransaction.isActive,
-    };
-    
-    updateTransaction(selectedTransaction.id, transactionData);
-    setSelectedTransaction(null);
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
   };
 
   return (
     <div className="space-y-4">
       <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>
-              <Input
-                placeholder="Filter date..."
-                value={filters.date}
-                onChange={(e) => setFilters({ ...filters, date: e.target.value })}
-                className="max-w-[150px]"
-              />
-            </TableHead>
-            <TableHead>
-              <Input
-                placeholder="Filter entity..."
-                value={filters.entity}
-                onChange={(e) => setFilters({ ...filters, entity: e.target.value })}
-                className="max-w-[150px]"
-              />
-            </TableHead>
-            <TableHead>
-              <Input
-                placeholder="Filter description..."
-                value={filters.description}
-                onChange={(e) => setFilters({ ...filters, description: e.target.value })}
-                className="max-w-[150px]"
-              />
-            </TableHead>
-            <TableHead>
-              <Input
-                placeholder="Filter type..."
-                value={filters.type}
-                onChange={(e) => setFilters({ ...filters, type: e.target.value })}
-                className="max-w-[150px]"
-              />
-            </TableHead>
-            <TableHead>
-              <Input
-                placeholder="Filter amount..."
-                value={filters.amount}
-                onChange={(e) => setFilters({ ...filters, amount: e.target.value })}
-                className="max-w-[150px]"
-              />
-            </TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
+        <TransactionFilters 
+          filters={filters} 
+          onFilterChange={handleFilterChange} 
+        />
         <TableBody>
           {filteredTransactions.map((transaction) => (
-            <TableRow key={transaction.id}>
-              <TableCell>{transaction.date}</TableCell>
-              <TableCell>
-                {findEntityName(transaction.entityId, mockHierarchicalData.rootEntity)}
-              </TableCell>
-              <TableCell>{transaction.description}</TableCell>
-              <TableCell>
-                <span
-                  className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
-                    transaction.type === "receivable"
-                      ? "bg-success/10 text-success"
-                      : "bg-warning/10 text-warning"
-                  }`}
-                >
-                  {transaction.type}
-                </span>
-              </TableCell>
-              <TableCell className="text-right">
-                ${transaction.amount.toLocaleString()}
-              </TableCell>
-              <TableCell className="space-x-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedTransaction(transaction)}
-                >
-                  <Pencil className="h-4 w-4" />
-                </Button>
-                <span
-                  className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold cursor-pointer ${
-                    transaction.isActive
-                      ? "bg-success/10 text-success"
-                      : "bg-muted/50 text-muted-foreground"
-                  }`}
-                  onClick={() => toggleTransactionStatus(transaction.id)}
-                >
-                  {transaction.isActive ? "Active" : "Inactive"}
-                </span>
-              </TableCell>
-            </TableRow>
+            <TransactionListItem
+              key={transaction.id}
+              transaction={transaction}
+              entityName={findEntityName(transaction.entityId, mockHierarchicalData.rootEntity)}
+              onEdit={(transaction) => {
+                // Open the CashFlowProjectionDrawer with pre-populated data
+                const event = new CustomEvent('openProjectionDrawer', {
+                  detail: {
+                    date: new Date(transaction.date),
+                    amount: transaction.amount.toString(),
+                    type: transaction.type,
+                    description: transaction.description,
+                    accountId: transaction.accountId,
+                  }
+                });
+                window.dispatchEvent(event);
+              }}
+              onToggleStatus={toggleTransactionStatus}
+            />
           ))}
         </TableBody>
       </Table>
-
-      {selectedTransaction && (
-        <div className="mt-4 border rounded-lg p-4">
-          <h3 className="text-lg font-semibold mb-4">Edit Transaction</h3>
-          <TransactionForm
-            onSubmit={handleSubmit}
-            initialData={{
-              date: selectedTransaction.date,
-              amount: selectedTransaction.amount.toString(),
-              type: selectedTransaction.type,
-              description: selectedTransaction.description,
-            }}
-            onCancel={() => setSelectedTransaction(null)}
-          />
-        </div>
-      )}
     </div>
   );
 };

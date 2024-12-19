@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AccountSelection } from "./CashFlowProjection/AccountSelection";
 import { ProjectionForm } from "./CashFlowProjection/ProjectionForm";
 import { ProjectionDrawerTrigger } from "./CashFlowProjection/ProjectionDrawerTrigger";
@@ -45,6 +45,23 @@ export const CashFlowProjectionDrawer = () => {
     setSelectedAccount,
     handleSubmit,
   } = useProjectionForm(() => setIsOpen(false));
+
+  useEffect(() => {
+    const handleOpenDrawer = (event: CustomEvent) => {
+      const { date, amount, type, description, accountId } = event.detail;
+      setDate(date);
+      setAmount(amount);
+      setType(type);
+      setDescription(description);
+      setSelectedAccount(accountId);
+      setIsOpen(true);
+    };
+
+    window.addEventListener('openProjectionDrawer', handleOpenDrawer as EventListener);
+    return () => {
+      window.removeEventListener('openProjectionDrawer', handleOpenDrawer as EventListener);
+    };
+  }, [setDate, setAmount, setType, setDescription, setSelectedAccount]);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
