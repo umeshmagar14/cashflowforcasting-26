@@ -62,9 +62,16 @@ export const TransactionsTable = () => {
     amount: "",
   });
   
-  // Sort transactions by date in descending order (most recent first)
+  // Filter for upcoming transactions and apply user filters
   const filteredTransactions = [...transactions]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .filter(transaction => {
+      // Only show transactions with future dates
+      const transactionDate = new Date(transaction.date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset time to start of day for fair comparison
+      return transactionDate >= today;
+    })
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) // Sort by date ascending for upcoming
     .filter(transaction => {
       return (
         transaction.date.toLowerCase().includes(filters.date.toLowerCase()) &&
@@ -95,7 +102,6 @@ export const TransactionsTable = () => {
               transaction={transaction}
               entityName={findEntityName(transaction.entityId, mockHierarchicalData.rootEntity)}
               onEdit={(transaction) => {
-                // Open the CashFlowProjectionDrawer with pre-populated data
                 const event = new CustomEvent('openProjectionDrawer', {
                   detail: {
                     date: new Date(transaction.date),
