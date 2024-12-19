@@ -11,19 +11,10 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useTransactionStore } from "@/store/transactionStore";
 import { TransactionForm } from "./TransactionForm";
-import { TransactionList } from "./TransactionList";
 
 export const TransactionDialog = () => {
   const { toast } = useToast();
-  const { transactions, addTransaction, updateTransaction, toggleTransactionStatus } = useTransactionStore();
-  
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
-
-  const filteredTransactions = transactions.filter(t => 
-    t.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    t.amount.toString().includes(searchQuery)
-  );
+  const { addTransaction } = useTransactionStore();
 
   const handleSubmit = (data: any) => {
     const transactionData = {
@@ -33,59 +24,28 @@ export const TransactionDialog = () => {
       accountId: "acc1"
     };
     
-    if (selectedTransaction) {
-      updateTransaction(selectedTransaction.id, transactionData);
-      toast({
-        title: "Success",
-        description: "Transaction has been updated successfully",
-      });
-    } else {
-      addTransaction(transactionData);
-      toast({
-        title: "Success",
-        description: "Transaction has been saved successfully",
-      });
-    }
-    
-    setSelectedTransaction(null);
-  };
-
-  const handleEdit = (transaction: any) => {
-    setSelectedTransaction(transaction);
+    addTransaction(transactionData);
+    toast({
+      title: "Success",
+      description: "Transaction has been saved successfully",
+    });
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Manage Transactions</Button>
+        <Button variant="outline">Add Transaction</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Manage Transactions</DialogTitle>
+          <DialogTitle>Add New Transaction</DialogTitle>
           <DialogDescription>
-            Add, modify, or toggle transaction status. Changes will automatically update the forecast.
+            Add a new transaction to the system. It will automatically update the forecast.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
-          <TransactionList
-            transactions={filteredTransactions}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            onToggleStatus={toggleTransactionStatus}
-            onEdit={handleEdit}
-          />
-
-          <TransactionForm
-            onSubmit={handleSubmit}
-            initialData={selectedTransaction ? {
-              date: selectedTransaction.date,
-              amount: selectedTransaction.amount.toString(),
-              type: selectedTransaction.type,
-              description: selectedTransaction.description,
-            } : undefined}
-            onCancel={selectedTransaction ? () => setSelectedTransaction(null) : undefined}
-          />
+          <TransactionForm onSubmit={handleSubmit} />
         </div>
       </DialogContent>
     </Dialog>
