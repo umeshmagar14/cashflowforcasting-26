@@ -22,7 +22,7 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
   transactions: [
     {
       id: 1,
-      date: "2024-03-15",
+      date: "2024-01-15",
       description: "Client Payment - ABC Corp",
       type: "receivable",
       amount: 15000,
@@ -32,7 +32,7 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
     },
     {
       id: 2,
-      date: "2024-03-20",
+      date: "2024-02-20",
       description: "Supplier Invoice - XYZ Ltd",
       type: "payable",
       amount: 8500,
@@ -42,7 +42,7 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
     },
     {
       id: 3,
-      date: "2024-03-25",
+      date: "2024-03-10",
       description: "Client Payment - DEF Inc",
       type: "receivable",
       amount: 12000,

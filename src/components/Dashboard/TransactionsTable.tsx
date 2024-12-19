@@ -58,6 +58,11 @@ const findEntityName = (entityId: string, root: Entity): string => {
 
 export const TransactionsTable = () => {
   const { transactions } = useTransactionStore();
+  
+  // Sort transactions by date in descending order (most recent first)
+  const sortedTransactions = [...transactions].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
 
   return (
     <Table>
@@ -68,10 +73,11 @@ export const TransactionsTable = () => {
           <TableHead>Description</TableHead>
           <TableHead>Type</TableHead>
           <TableHead className="text-right">Amount</TableHead>
+          <TableHead>Status</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {transactions.map((transaction) => (
+        {sortedTransactions.map((transaction) => (
           <TableRow key={transaction.id}>
             <TableCell>{transaction.date}</TableCell>
             <TableCell>
@@ -91,6 +97,17 @@ export const TransactionsTable = () => {
             </TableCell>
             <TableCell className="text-right">
               ${transaction.amount.toLocaleString()}
+            </TableCell>
+            <TableCell>
+              <span
+                className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
+                  transaction.isActive
+                    ? "bg-success/10 text-success"
+                    : "bg-muted/50 text-muted-foreground"
+                }`}
+              >
+                {transaction.isActive ? "Active" : "Inactive"}
+              </span>
             </TableCell>
           </TableRow>
         ))}
