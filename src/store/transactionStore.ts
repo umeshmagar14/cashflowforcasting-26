@@ -8,13 +8,14 @@ type Transaction = {
   amount: number;
   entityId: string;
   accountId: string;
+  isActive: boolean;
 };
 
 type TransactionStore = {
   transactions: Transaction[];
-  addTransaction: (transaction: Omit<Transaction, 'id'>) => void;
+  addTransaction: (transaction: Omit<Transaction, 'id' | 'isActive'>) => void;
   updateTransaction: (id: number, transaction: Partial<Transaction>) => void;
-  deleteTransaction: (id: number) => void;
+  toggleTransactionStatus: (id: number) => void;
 };
 
 export const useTransactionStore = create<TransactionStore>((set) => ({
@@ -26,7 +27,8 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
       type: "receivable",
       amount: 15000,
       entityId: "root1",
-      accountId: "acc1"
+      accountId: "acc1",
+      isActive: true
     },
     {
       id: 2,
@@ -35,7 +37,8 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
       type: "payable",
       amount: 8500,
       entityId: "sub1",
-      accountId: "acc2"
+      accountId: "acc2",
+      isActive: true
     },
     {
       id: 3,
@@ -44,12 +47,13 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
       type: "receivable",
       amount: 12000,
       entityId: "root1",
-      accountId: "acc1"
+      accountId: "acc1",
+      isActive: true
     },
   ],
   addTransaction: (transaction) =>
     set((state) => ({
-      transactions: [...state.transactions, { ...transaction, id: Date.now() }],
+      transactions: [...state.transactions, { ...transaction, id: Date.now(), isActive: true }],
     })),
   updateTransaction: (id, transaction) =>
     set((state) => ({
@@ -57,8 +61,10 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
         t.id === id ? { ...t, ...transaction } : t
       ),
     })),
-  deleteTransaction: (id) =>
+  toggleTransactionStatus: (id) =>
     set((state) => ({
-      transactions: state.transactions.filter((t) => t.id !== id),
+      transactions: state.transactions.map((t) =>
+        t.id === id ? { ...t, isActive: !t.isActive } : t
+      ),
     })),
 }));

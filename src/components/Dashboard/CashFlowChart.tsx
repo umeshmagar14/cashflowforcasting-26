@@ -6,8 +6,11 @@ export const CashFlowChart = () => {
   const { transactions } = useTransactionStore();
   
   const chartData = useMemo(() => {
+    // Only consider active transactions
+    const activeTransactions = transactions.filter(t => t.isActive);
+    
     // Group transactions by month and calculate actual values
-    const monthlyData = transactions.reduce((acc: Record<string, number>, transaction) => {
+    const monthlyData = activeTransactions.reduce((acc: Record<string, number>, transaction) => {
       const month = transaction.date.substring(0, 7); // Get YYYY-MM
       acc[month] = (acc[month] || 0) + (
         transaction.type === "receivable" ? transaction.amount : -transaction.amount

@@ -1,15 +1,33 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-
-const mockData = [
-  { date: "2024-01", actual: 4000, forecast: 4400, confidence_high: 4800, confidence_low: 4000 },
-  { date: "2024-02", actual: 3000, forecast: 3200, confidence_high: 3600, confidence_low: 2800 },
-  { date: "2024-03", actual: 2000, forecast: 2600, confidence_high: 3000, confidence_low: 2200 },
-  { date: "2024-04", actual: null, forecast: 3400, confidence_high: 3800, confidence_low: 3000 },
-  { date: "2024-05", actual: null, forecast: 3800, confidence_high: 4200, confidence_low: 3400 },
-  { date: "2024-06", actual: null, forecast: 4200, confidence_high: 4600, confidence_low: 3800 },
-];
+import { useTransactionStore } from "@/store/transactionStore";
+import { useMemo } from "react";
 
 export const CashFlowTable = () => {
+  const { transactions } = useTransactionStore();
+
+  const tableData = useMemo(() => {
+    // Only consider active transactions
+    const activeTransactions = transactions.filter(t => t.isActive);
+    
+    // Group transactions by month and calculate actual values
+    const monthlyData = activeTransactions.reduce((acc: Record<string, number>, transaction) => {
+      const month = transaction.date.substring(0, 7); // Get YYYY-MM
+      acc[month] = (acc[month] || 0) + (
+        transaction.type === "receivable" ? transaction.amount : -transaction.amount
+      );
+      return acc;
+    }, {});
+
+    return [
+      { date: "2024-01", actual: monthlyData["2024-01"] || null, forecast: 4400, confidence_high: 4800, confidence_low: 4000 },
+      { date: "2024-02", actual: monthlyData["2024-02"] || null, forecast: 3200, confidence_high: 3600, confidence_low: 2800 },
+      { date: "2024-03", actual: monthlyData["2024-03"] || null, forecast: 2600, confidence_high: 3000, confidence_low: 2200 },
+      { date: "2024-04", actual: monthlyData["2024-04"] || null, forecast: 3400, confidence_high: 3800, confidence_low: 3000 },
+      { date: "2024-05", actual: monthlyData["2024-05"] || null, forecast: 3800, confidence_high: 4200, confidence_low: 3400 },
+      { date: "2024-06", actual: monthlyData["2024-06"] || null, forecast: 4200, confidence_high: 4600, confidence_low: 3800 },
+    ];
+  }, [transactions]);
+
   return (
     <div className="w-full">
       <Table>
@@ -23,7 +41,7 @@ export const CashFlowTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {mockData.map((row) => (
+          {tableData.map((row) => (
             <TableRow key={row.date}>
               <TableCell>{row.date}</TableCell>
               <TableCell className="text-right">
