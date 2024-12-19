@@ -6,6 +6,7 @@ import { MetricsOverview } from "@/components/Dashboard/MetricsOverview";
 import { CashFlowTable } from "@/components/Dashboard/CashFlowTable";
 import { ForecastControls } from "@/components/Dashboard/ForecastControls";
 import { Navbar } from "@/components/Navbar/Navbar";
+import { TransactionDialog } from "@/components/Dashboard/TransactionManagement/TransactionDialog";
 import { useState } from "react";
 
 const mockHierarchicalData = {
@@ -68,8 +69,9 @@ const Index = () => {
           <MetricsOverview />
 
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Consolidated Cash Flow Forecast</CardTitle>
+              <TransactionDialog />
             </CardHeader>
             <CardContent>
               <ForecastControls
