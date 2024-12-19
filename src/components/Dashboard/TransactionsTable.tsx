@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Entity } from "@/types/accountTypes";
+import { useTransactionStore } from "@/store/transactionStore";
 
 const mockHierarchicalData = {
   id: "corp1",
@@ -44,36 +45,6 @@ const mockHierarchicalData = {
   }
 };
 
-const mockTransactions = [
-  {
-    id: 1,
-    date: "2024-03-15",
-    description: "Client Payment - ABC Corp",
-    type: "receivable",
-    amount: 15000,
-    entityId: "root1",
-    accountId: "acc1"
-  },
-  {
-    id: 2,
-    date: "2024-03-20",
-    description: "Supplier Invoice - XYZ Ltd",
-    type: "payable",
-    amount: 8500,
-    entityId: "sub1",
-    accountId: "acc2"
-  },
-  {
-    id: 3,
-    date: "2024-03-25",
-    description: "Client Payment - DEF Inc",
-    type: "receivable",
-    amount: 12000,
-    entityId: "root1",
-    accountId: "acc1"
-  },
-];
-
 const findEntityName = (entityId: string, root: Entity): string => {
   if (root.id === entityId) return root.name;
   
@@ -86,6 +57,8 @@ const findEntityName = (entityId: string, root: Entity): string => {
 };
 
 export const TransactionsTable = () => {
+  const { transactions } = useTransactionStore();
+
   return (
     <Table>
       <TableHeader>
@@ -98,7 +71,7 @@ export const TransactionsTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {mockTransactions.map((transaction) => (
+        {transactions.map((transaction) => (
           <TableRow key={transaction.id}>
             <TableCell>{transaction.date}</TableCell>
             <TableCell>

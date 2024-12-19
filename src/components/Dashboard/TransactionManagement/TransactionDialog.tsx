@@ -18,41 +18,55 @@ import {
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Search, Trash2 } from "lucide-react";
+import { useTransactionStore } from "@/store/transactionStore";
 
 export const TransactionDialog = () => {
+  const { toast } = useToast();
+  const { transactions, addTransaction, updateTransaction, deleteTransaction } = useTransactionStore();
+  
   const [amount, setAmount] = useState("");
   const [type, setType] = useState<"receivable" | "payable">("receivable");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
-  const { toast } = useToast();
 
-  const mockTransactions = [
-    { id: 1, date: "2024-03-15", description: "Client Payment", type: "receivable", amount: "15000" },
-    { id: 2, date: "2024-03-20", description: "Supplier Invoice", type: "payable", amount: "8500" },
-  ].filter(t => 
+  const filteredTransactions = transactions.filter(t => 
     t.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    t.amount.includes(searchQuery)
+    t.amount.toString().includes(searchQuery)
   );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    console.log("Saving transaction:", { amount, type, description, date });
+    const transactionData = {
+      date,
+      description,
+      type,
+      amount: Number(amount),
+      entityId: "root1", // Default values for demo
+      accountId: "acc1"
+    };
     
-    toast({
-      title: "Success",
-      description: selectedTransaction 
-        ? "Transaction has been updated successfully"
-        : "Transaction has been saved successfully",
-    });
+    if (selectedTransaction) {
+      updateTransaction(selectedTransaction.id, transactionData);
+      toast({
+        title: "Success",
+        description: "Transaction has been updated successfully",
+      });
+    } else {
+      addTransaction(transactionData);
+      toast({
+        title: "Success",
+        description: "Transaction has been saved successfully",
+      });
+    }
     
     resetForm();
   };
 
   const handleDelete = (id: number) => {
-    console.log("Deleting transaction:", id);
+    deleteTransaction(id);
     toast({
       title: "Success",
       description: "Transaction has been deleted successfully",
@@ -61,7 +75,7 @@ export const TransactionDialog = () => {
 
   const handleEdit = (transaction: any) => {
     setSelectedTransaction(transaction);
-    setAmount(transaction.amount);
+    setAmount(transaction.amount.toString());
     setType(transaction.type);
     setDescription(transaction.description);
     setDate(transaction.date);
@@ -102,7 +116,7 @@ export const TransactionDialog = () => {
 
           {/* Transaction List */}
           <div className="space-y-2 max-h-[200px] overflow-y-auto">
-            {mockTransactions.map((transaction) => (
+            {filteredTransactions.map((transaction) => (
               <div
                 key={transaction.id}
                 className="flex items-center justify-between p-2 rounded-md border hover:bg-accent"
