@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type Transaction = {
+export type Transaction = {
   id: number;
   date: string;
   description: string;
