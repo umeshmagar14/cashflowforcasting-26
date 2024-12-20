@@ -43,6 +43,8 @@ export const CashFlowProjectionDrawer = () => {
     setDescription,
     selectedAccount,
     setSelectedAccount,
+    accountCategory,
+    setAccountCategory,
     handleSubmit,
   } = useProjectionForm(() => setIsOpen(false));
 
@@ -90,6 +92,8 @@ export const CashFlowProjectionDrawer = () => {
               setType={setType}
               description={description}
               setDescription={setDescription}
+              accountCategory={accountCategory}
+              setAccountCategory={setAccountCategory}
             />
 
             <SheetFooter>
