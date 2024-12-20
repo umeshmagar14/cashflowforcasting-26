@@ -4,6 +4,7 @@ import { useTransactionStore } from "@/store/transactionStore";
 import { useState } from "react";
 import { TransactionFilters } from "./TransactionList/TransactionFilters";
 import { TransactionListItem } from "./TransactionList/TransactionListItem";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const mockHierarchicalData = {
   id: "corp1",
@@ -61,6 +62,7 @@ export const TransactionsTable = () => {
     type: "",
     amount: "",
   });
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   
   // Filter for upcoming transactions and apply user filters
   const filteredTransactions = [...transactions]
@@ -73,7 +75,9 @@ export const TransactionsTable = () => {
     })
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) // Sort by date ascending for upcoming
     .filter(transaction => {
+      const categoryMatch = selectedCategory === "all" || transaction.accountCategory === selectedCategory;
       return (
+        categoryMatch &&
         transaction.date.toLowerCase().includes(filters.date.toLowerCase()) &&
         findEntityName(transaction.entityId, mockHierarchicalData.rootEntity)
           .toLowerCase()
@@ -90,6 +94,22 @@ export const TransactionsTable = () => {
 
   return (
     <div className="space-y-4">
+      <div className="flex justify-end mb-4">
+        <div className="w-48">
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="bg-white">
+              <SelectValue placeholder="Filter by category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="group1">Group 1</SelectItem>
+              <SelectItem value="group2">Group 2</SelectItem>
+              <SelectItem value="group3">Group 3</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
       <Table>
         <TransactionFilters 
           filters={filters} 
