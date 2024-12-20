@@ -64,16 +64,15 @@ export const TransactionsTable = () => {
   });
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   
-  // Filter for upcoming transactions and apply user filters
-  const filteredTransactions = [...transactions]
+  const filteredTransactions = transactions
     .filter(transaction => {
-      // Only show transactions with future dates
+      // Filter for upcoming transactions
       const transactionDate = new Date(transaction.date);
       const today = new Date();
-      today.setHours(0, 0, 0, 0); // Reset time to start of day for fair comparison
+      today.setHours(0, 0, 0, 0);
       return transactionDate >= today;
     })
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()) // Sort by date ascending for upcoming
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .filter(transaction => {
       const categoryMatch = selectedCategory === "all" || transaction.accountCategory === selectedCategory;
       return (
@@ -129,6 +128,7 @@ export const TransactionsTable = () => {
                     type: transaction.type,
                     description: transaction.description,
                     accountId: transaction.accountId,
+                    accountCategory: transaction.accountCategory,
                   }
                 });
                 window.dispatchEvent(event);
