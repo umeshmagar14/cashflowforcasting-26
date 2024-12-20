@@ -48,6 +48,7 @@ export const TransactionFilters = ({ filters, onFilterChange }: TransactionFilte
             className="max-w-[150px]"
           />
         </TableHead>
+        <TableHead>Category</TableHead>
         <TableHead>
           <Input
             placeholder="Filter amount..."

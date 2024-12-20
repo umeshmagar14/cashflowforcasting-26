@@ -11,6 +11,7 @@ interface TransactionListItemProps {
     type: string;
     amount: number;
     isActive: boolean;
+    accountCategory: string;
   };
   entityName: string;
   onEdit: (transaction: any) => void;
@@ -23,6 +24,19 @@ export const TransactionListItem = ({
   onEdit,
   onToggleStatus,
 }: TransactionListItemProps) => {
+  const getCategoryLabel = (category: string) => {
+    switch (category) {
+      case 'group1':
+        return 'Group 1';
+      case 'group2':
+        return 'Group 2';
+      case 'group3':
+        return 'Group 3';
+      default:
+        return category;
+    }
+  };
+
   return (
     <TableRow key={transaction.id}>
       <TableCell>{transaction.date}</TableCell>
@@ -37,6 +51,11 @@ export const TransactionListItem = ({
           }`}
         >
           {transaction.type}
+        </span>
+      </TableCell>
+      <TableCell>
+        <span className="inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800">
+          {getCategoryLabel(transaction.accountCategory)}
         </span>
       </TableCell>
       <TableCell className="text-right">

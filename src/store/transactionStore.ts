@@ -54,6 +54,28 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
       accountCategory: "group3",
       isActive: true
     },
+    {
+      id: 4,
+      date: "2024-04-05",
+      description: "Marketing Services - GHI Agency",
+      type: "payable",
+      amount: 5000,
+      entityId: "root1",
+      accountId: "acc1",
+      accountCategory: "group1",
+      isActive: true
+    },
+    {
+      id: 5,
+      date: "2024-05-15",
+      description: "Software License - JKL Software",
+      type: "payable",
+      amount: 3000,
+      entityId: "sub1",
+      accountId: "acc2",
+      accountCategory: "group2",
+      isActive: true
+    }
   ],
   addTransaction: (transaction) =>
     set((state) => ({
