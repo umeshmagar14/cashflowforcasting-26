@@ -8,6 +8,7 @@ type Transaction = {
   amount: number;
   entityId: string;
   accountId: string;
+  accountCategory: 'group1' | 'group2' | 'group3';
   isActive: boolean;
 };
 
@@ -28,6 +29,7 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
       amount: 15000,
       entityId: "root1",
       accountId: "acc1",
+      accountCategory: "group1",
       isActive: true
     },
     {
@@ -38,6 +40,7 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
       amount: 8500,
       entityId: "sub1",
       accountId: "acc2",
+      accountCategory: "group2",
       isActive: true
     },
     {
@@ -48,6 +51,7 @@ export const useTransactionStore = create<TransactionStore>((set) => ({
       amount: 12000,
       entityId: "root1",
       accountId: "acc1",
+      accountCategory: "group3",
       isActive: true
     },
   ],

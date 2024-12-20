@@ -7,12 +7,13 @@ export const useProjectionForm = (onSubmitSuccess: () => void) => {
   const [type, setType] = useState<"payable" | "receivable">("receivable");
   const [description, setDescription] = useState("");
   const [selectedAccount, setSelectedAccount] = useState<string>("");
+  const [accountCategory, setAccountCategory] = useState<string>("group1");
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!date || !amount || !selectedAccount || !description) {
+    if (!date || !amount || !selectedAccount || !description || !accountCategory) {
       toast({
         variant: "destructive",
         title: "Validation Error",
@@ -27,6 +28,7 @@ export const useProjectionForm = (onSubmitSuccess: () => void) => {
       type,
       description,
       accountId: selectedAccount,
+      accountCategory,
     };
 
     console.log("Form submitted:", formData);
@@ -46,6 +48,7 @@ export const useProjectionForm = (onSubmitSuccess: () => void) => {
     setType("receivable");
     setDescription("");
     setSelectedAccount("");
+    setAccountCategory("group1");
   };
 
   return {
@@ -59,6 +62,8 @@ export const useProjectionForm = (onSubmitSuccess: () => void) => {
     setDescription,
     selectedAccount,
     setSelectedAccount,
+    accountCategory,
+    setAccountCategory,
     handleSubmit,
   };
 };

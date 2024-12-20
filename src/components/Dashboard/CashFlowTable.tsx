@@ -1,13 +1,17 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTransactionStore } from "@/store/transactionStore";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const CashFlowTable = () => {
   const { transactions } = useTransactionStore();
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const tableData = useMemo(() => {
-    // Only consider active transactions
-    const activeTransactions = transactions.filter(t => t.isActive);
+    // Only consider active transactions and filter by category if selected
+    const activeTransactions = transactions.filter(t => 
+      t.isActive && (selectedCategory === "all" || t.accountCategory === selectedCategory)
+    );
     
     // Group transactions by month and calculate actual values
     const monthlyData = activeTransactions.reduce((acc: Record<string, number>, transaction) => {
@@ -26,10 +30,26 @@ export const CashFlowTable = () => {
       { date: "2024-05", actual: monthlyData["2024-05"] || null, forecast: 3800, confidence_high: 4200, confidence_low: 3400 },
       { date: "2024-06", actual: monthlyData["2024-06"] || null, forecast: 4200, confidence_high: 4600, confidence_low: 3800 },
     ];
-  }, [transactions]);
+  }, [transactions, selectedCategory]);
 
   return (
-    <div className="w-full">
+    <div className="w-full space-y-4">
+      <div className="flex justify-end">
+        <div className="w-48">
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="bg-white">
+              <SelectValue placeholder="Filter by category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="group1">Group 1</SelectItem>
+              <SelectItem value="group2">Group 2</SelectItem>
+              <SelectItem value="group3">Group 3</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
       <Table>
         <TableHeader>
           <TableRow>

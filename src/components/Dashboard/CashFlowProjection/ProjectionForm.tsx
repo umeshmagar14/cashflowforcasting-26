@@ -22,6 +22,8 @@ interface ProjectionFormProps {
   setType: (type: "payable" | "receivable") => void;
   description: string;
   setDescription: (description: string) => void;
+  accountCategory: string;
+  setAccountCategory: (category: string) => void;
 }
 
 export const ProjectionForm = ({
@@ -33,6 +35,8 @@ export const ProjectionForm = ({
   setType,
   description,
   setDescription,
+  accountCategory,
+  setAccountCategory,
 }: ProjectionFormProps) => {
   const today = new Date();
   const futureDate = new Date();
@@ -49,6 +53,20 @@ export const ProjectionForm = ({
           <SelectContent className="bg-white">
             <SelectItem value="receivable" className="bg-white hover:bg-gray-100">Receivable</SelectItem>
             <SelectItem value="payable" className="bg-white hover:bg-gray-100">Payable</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Account Category</label>
+        <Select value={accountCategory} onValueChange={setAccountCategory}>
+          <SelectTrigger className="bg-dropdown">
+            <SelectValue placeholder="Select category" />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            <SelectItem value="group1" className="bg-white hover:bg-gray-100">Group 1</SelectItem>
+            <SelectItem value="group2" className="bg-white hover:bg-gray-100">Group 2</SelectItem>
+            <SelectItem value="group3" className="bg-white hover:bg-gray-100">Group 3</SelectItem>
           </SelectContent>
         </Select>
       </div>
