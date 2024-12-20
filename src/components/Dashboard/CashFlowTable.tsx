@@ -8,13 +8,13 @@ export const CashFlowTable = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const tableData = useMemo(() => {
-    // Only consider active transactions and filter by category if selected
-    const activeTransactions = transactions.filter(t => 
+    // Filter transactions by category and active status
+    const filteredTransactions = transactions.filter(t => 
       t.isActive && (selectedCategory === "all" || t.accountCategory === selectedCategory)
     );
     
     // Group transactions by month and calculate actual values
-    const monthlyData = activeTransactions.reduce((acc: Record<string, number>, transaction) => {
+    const monthlyData = filteredTransactions.reduce((acc: Record<string, number>, transaction) => {
       const month = transaction.date.substring(0, 7); // Get YYYY-MM
       acc[month] = (acc[month] || 0) + (
         transaction.type === "receivable" ? transaction.amount : -transaction.amount
