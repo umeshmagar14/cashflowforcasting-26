@@ -24,19 +24,17 @@ export const useTransactionFilters = (transactions: Transaction[], rootEntity: E
   };
 
   const getUpcomingTransactions = () => {
-    return transactions
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const upcomingTransactions = transactions
       .filter(transaction => {
-        // Filter for upcoming transactions
         const transactionDate = new Date(transaction.date);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
         return transactionDate >= today;
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       .filter(transaction => {
-        const categoryMatch = selectedCategory === "all" || transaction.accountCategory === selectedCategory;
         return (
-          categoryMatch &&
           transaction.date.toLowerCase().includes(filters.date.toLowerCase()) &&
           findEntityName(transaction.entityId, rootEntity)
             .toLowerCase()
@@ -46,6 +44,24 @@ export const useTransactionFilters = (transactions: Transaction[], rootEntity: E
           transaction.amount.toString().includes(filters.amount)
         );
       });
+
+    if (selectedCategory === "all") {
+      return upcomingTransactions;
+    }
+
+    return upcomingTransactions.filter(
+      transaction => transaction.accountCategory === selectedCategory
+    );
+  };
+
+  const getGroupedTransactions = () => {
+    const allTransactions = getUpcomingTransactions();
+    const groups = {
+      group1: allTransactions.filter(t => t.accountCategory === 'group1'),
+      group2: allTransactions.filter(t => t.accountCategory === 'group2'),
+      group3: allTransactions.filter(t => t.accountCategory === 'group3'),
+    };
+    return groups;
   };
 
   const handleFilterChange = (key: string, value: string) => {
@@ -58,6 +74,7 @@ export const useTransactionFilters = (transactions: Transaction[], rootEntity: E
     setSelectedCategory,
     handleFilterChange,
     getUpcomingTransactions,
+    getGroupedTransactions,
     findEntityName,
   };
 };

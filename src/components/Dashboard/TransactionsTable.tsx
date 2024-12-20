@@ -49,27 +49,23 @@ export const TransactionsTable = () => {
     setSelectedCategory,
     handleFilterChange,
     getUpcomingTransactions,
+    getGroupedTransactions,
     findEntityName,
   } = useTransactionFilters(transactions, mockHierarchicalData.rootEntity);
 
+  const groupedTransactions = getGroupedTransactions();
   const filteredTransactions = getUpcomingTransactions();
 
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-end mb-4">
-        <CategoryFilter 
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-        />
-      </div>
-
+  const renderTransactionGroup = (transactions: any[], groupTitle: string) => (
+    <div key={groupTitle} className="mb-8">
+      <h3 className="text-lg font-semibold mb-4">{groupTitle}</h3>
       <Table>
         <TransactionFilters 
           filters={filters} 
           onFilterChange={handleFilterChange} 
         />
         <TableBody>
-          {filteredTransactions.map((transaction) => (
+          {transactions.map((transaction) => (
             <TransactionListItem
               key={transaction.id}
               transaction={transaction}
@@ -92,6 +88,61 @@ export const TransactionsTable = () => {
           ))}
         </TableBody>
       </Table>
+    </div>
+  );
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-end mb-4">
+        <CategoryFilter 
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+        />
+      </div>
+
+      {selectedCategory === "all" ? (
+        <>
+          {Object.entries(groupedTransactions).map(([group, transactions]) => {
+            if (transactions.length === 0) return null;
+            return renderTransactionGroup(
+              transactions,
+              group === "group1" ? "Group 1 Transactions" :
+              group === "group2" ? "Group 2 Transactions" :
+              "Group 3 Transactions"
+            );
+          })}
+        </>
+      ) : (
+        <Table>
+          <TransactionFilters 
+            filters={filters} 
+            onFilterChange={handleFilterChange} 
+          />
+          <TableBody>
+            {filteredTransactions.map((transaction) => (
+              <TransactionListItem
+                key={transaction.id}
+                transaction={transaction}
+                entityName={findEntityName(transaction.entityId, mockHierarchicalData.rootEntity)}
+                onEdit={(transaction) => {
+                  const event = new CustomEvent('openProjectionDrawer', {
+                    detail: {
+                      date: new Date(transaction.date),
+                      amount: transaction.amount.toString(),
+                      type: transaction.type,
+                      description: transaction.description,
+                      accountId: transaction.accountId,
+                      accountCategory: transaction.accountCategory,
+                    }
+                  });
+                  window.dispatchEvent(event);
+                }}
+                onToggleStatus={toggleTransactionStatus}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </div>
   );
 };
