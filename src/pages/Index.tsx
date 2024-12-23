@@ -9,6 +9,7 @@ import { Navbar } from "@/components/Navbar/Navbar";
 import { TransactionDialog } from "@/components/Dashboard/TransactionManagement/TransactionDialog";
 import { useState } from "react";
 import { AccountGroup } from "@/types/accountTypes";
+import { useTransactionStore } from "@/store/transactionStore";
 
 const mockHierarchicalData = {
   id: "corp1",
@@ -56,6 +57,18 @@ const Index = () => {
   const [view, setView] = useState<"chart" | "table">("chart");
   const [selectedAccounts, setSelectedAccounts] = useState<string[]>([mockAccounts[0].id]);
   const [accountGroups, setAccountGroups] = useState<AccountGroup[]>([]);
+  const { transactions } = useTransactionStore();
+
+  // Prepare data for download
+  const forecastData = transactions
+    .filter(t => t.isActive && selectedAccounts.includes(t.accountId))
+    .map(t => ({
+      Date: t.date,
+      Account: mockAccounts.find(a => a.id === t.accountId)?.name || '',
+      Type: t.type,
+      Amount: t.amount,
+      Description: t.description
+    }));
 
   return (
     <>
@@ -83,6 +96,7 @@ const Index = () => {
                 selectedAccounts={selectedAccounts}
                 onAccountsChange={setSelectedAccounts}
                 accounts={mockAccounts}
+                data={forecastData}
               />
               {view === "chart" ? (
                 <CashFlowChart 

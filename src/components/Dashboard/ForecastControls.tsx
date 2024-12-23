@@ -2,6 +2,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { BarChart3Icon, TableIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Toggle } from "@/components/ui/toggle";
+import { ForecastDownloadOptions } from "./ForecastDownloadOptions";
 
 interface Account {
   id: string;
@@ -14,6 +15,7 @@ interface ForecastControlsProps {
   selectedAccounts: string[];
   onAccountsChange: (accounts: string[]) => void;
   accounts: Account[];
+  data: any[];
 }
 
 export const ForecastControls = ({
@@ -22,6 +24,7 @@ export const ForecastControls = ({
   selectedAccounts,
   onAccountsChange,
   accounts,
+  data,
 }: ForecastControlsProps) => {
   const handleAccountToggle = (accountId: string) => {
     if (selectedAccounts.includes(accountId)) {
@@ -47,14 +50,17 @@ export const ForecastControls = ({
           </Toggle>
         ))}
       </div>
-      <ToggleGroup type="single" value={view} onValueChange={(v) => v && onViewChange(v as "chart" | "table")}>
-        <ToggleGroupItem value="chart" aria-label="Show chart view">
-          <BarChart3Icon className="h-4 w-4" />
-        </ToggleGroupItem>
-        <ToggleGroupItem value="table" aria-label="Show table view">
-          <TableIcon className="h-4 w-4" />
-        </ToggleGroupItem>
-      </ToggleGroup>
+      <div className="flex items-center gap-2">
+        <ForecastDownloadOptions data={data} />
+        <ToggleGroup type="single" value={view} onValueChange={(v) => v && onViewChange(v as "chart" | "table")}>
+          <ToggleGroupItem value="chart" aria-label="Show chart view">
+            <BarChart3Icon className="h-4 w-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="table" aria-label="Show table view">
+            <TableIcon className="h-4 w-4" />
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </div>
     </div>
   );
 };
