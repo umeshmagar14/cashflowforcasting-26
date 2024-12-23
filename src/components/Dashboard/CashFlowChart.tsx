@@ -4,36 +4,30 @@ import { useMemo, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { AccountGroup } from "@/types/accountTypes";
+import { CreateGroupDialog } from "./AccountGroups/CreateGroupDialog";
+import { GroupsList } from "./AccountGroups/GroupsList";
 
 export const CashFlowChart = () => {
   const { transactions } = useTransactionStore();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [accountGroups, setAccountGroups] = useState<AccountGroup[]>([]);
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
-  const [newGroupName, setNewGroupName] = useState("");
-  const [selectedAccounts, setSelectedAccounts] = useState<string[]>([]);
-  const [projectedGrowth, setProjectedGrowth] = useState<string>("");
-  
-  const handleCreateGroup = () => {
-    if (newGroupName && selectedAccounts.length > 0) {
-      const newGroup: AccountGroup = {
-        id: `group-${Date.now()}`,
-        name: newGroupName,
-        accountIds: selectedAccounts,
-        projectedGrowth: parseFloat(projectedGrowth) || 0,
-      };
-      setAccountGroups([...accountGroups, newGroup]);
-      setIsCreateGroupOpen(false);
-      setNewGroupName("");
-      setSelectedAccounts([]);
-      setProjectedGrowth("");
-    }
+
+  const handleCreateGroup = (groupData: {
+    name: string;
+    accountIds: string[];
+    projectedGrowth: number;
+  }) => {
+    const newGroup: AccountGroup = {
+      id: `group-${Date.now()}`,
+      name: groupData.name,
+      accountIds: groupData.accountIds,
+      projectedGrowth: groupData.projectedGrowth,
+    };
+    setAccountGroups([...accountGroups, newGroup]);
   };
-  
+
   const chartData = useMemo(() => {
     // Filter transactions by category and active status
     const filteredTransactions = transactions.filter(t => 
@@ -136,67 +130,23 @@ export const CashFlowChart = () => {
             </SelectContent>
           </Select>
         </div>
-        
-        <Dialog open={isCreateGroupOpen} onOpenChange={setIsCreateGroupOpen}>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="gap-2">
-              <PlusCircle className="h-4 w-4" />
-              Create Account Group
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create New Account Group</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <Label>Group Name</Label>
-                <Input 
-                  value={newGroupName}
-                  onChange={(e) => setNewGroupName(e.target.value)}
-                  placeholder="Enter group name"
-                />
-              </div>
-              <div>
-                <Label>Projected Growth (%)</Label>
-                <Input 
-                  type="number"
-                  value={projectedGrowth}
-                  onChange={(e) => setProjectedGrowth(e.target.value)}
-                  placeholder="Enter projected growth percentage"
-                />
-              </div>
-              <div>
-                <Label>Select Accounts</Label>
-                {/* Add account selection checkboxes here */}
-                <div className="space-y-2">
-                  {transactions.map(t => (
-                    <div key={t.accountId} className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={selectedAccounts.includes(t.accountId)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedAccounts([...selectedAccounts, t.accountId]);
-                          } else {
-                            setSelectedAccounts(selectedAccounts.filter(id => id !== t.accountId));
-                          }
-                        }}
-                      />
-                      <span>{t.accountId}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <Button onClick={handleCreateGroup}>Create Group</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+
+        <Button
+          variant="outline"
+          className="gap-2"
+          onClick={() => setIsCreateGroupOpen(true)}
+        >
+          <PlusCircle className="h-4 w-4" />
+          Create Account Group
+        </Button>
       </div>
-      
+
       <div className="h-[400px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+          <AreaChart
+            data={chartData}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
             <YAxis />
@@ -242,22 +192,14 @@ export const CashFlowChart = () => {
           </AreaChart>
         </ResponsiveContainer>
       </div>
-      
-      {accountGroups.length > 0 && (
-        <div className="mt-4">
-          <h3 className="text-lg font-semibold mb-2">Account Groups</h3>
-          <div className="space-y-2">
-            {accountGroups.map(group => (
-              <div key={group.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                <span>{group.name}</span>
-                <span className="text-sm text-gray-500">
-                  Growth: {group.projectedGrowth}%
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+
+      <CreateGroupDialog
+        isOpen={isCreateGroupOpen}
+        onOpenChange={setIsCreateGroupOpen}
+        onCreateGroup={handleCreateGroup}
+      />
+
+      <GroupsList groups={accountGroups} />
     </div>
   );
 };
