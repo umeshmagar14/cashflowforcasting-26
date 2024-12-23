@@ -1,17 +1,19 @@
 import { EntityFilter } from "./EntityFilter";
 import { CashFlowProjectionDrawer } from "./CashFlowProjectionDrawer";
-import { Entity } from "@/types/accountTypes";
+import { Entity, AccountGroup } from "@/types/accountTypes";
 
 interface DashboardHeaderProps {
   selectedEntityId: string;
   onEntityChange: (entityId: string) => void;
   rootEntity: Entity;
+  accountGroups: AccountGroup[];
 }
 
 export const DashboardHeader = ({
   selectedEntityId,
   onEntityChange,
   rootEntity,
+  accountGroups,
 }: DashboardHeaderProps) => {
   return (
     <div className="flex items-center justify-between">
@@ -27,7 +29,7 @@ export const DashboardHeader = ({
           onEntityChange={onEntityChange}
           rootEntity={rootEntity}
         />
-        <CashFlowProjectionDrawer />
+        <CashFlowProjectionDrawer accountGroups={accountGroups} />
       </div>
     </div>
   );
