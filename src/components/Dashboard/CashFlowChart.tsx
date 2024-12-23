@@ -153,7 +153,7 @@ export const CashFlowChart = ({ accountGroups = [], onGroupsChange }: CashFlowCh
           onClick={() => setIsCreateGroupOpen(true)}
         >
           <PlusCircle className="h-4 w-4" />
-          Create Account Group
+          Create Forecast Group
         </Button>
       </div>
 

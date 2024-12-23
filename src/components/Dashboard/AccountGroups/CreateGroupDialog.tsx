@@ -29,18 +29,16 @@ interface CreateGroupDialogProps {
 export const CreateGroupDialog = ({ isOpen, onOpenChange, onCreateGroup }: CreateGroupDialogProps) => {
   const [newGroupName, setNewGroupName] = useState("");
   const [selectedAccounts, setSelectedAccounts] = useState<string[]>([]);
-  const [projectedGrowth, setProjectedGrowth] = useState("");
 
   const handleCreateGroup = () => {
     if (newGroupName && selectedAccounts.length > 0) {
       onCreateGroup({
         name: newGroupName,
         accountIds: selectedAccounts,
-        projectedGrowth: parseFloat(projectedGrowth) || 0,
+        projectedGrowth: 0, // Default value since we removed the field
       });
       setNewGroupName("");
       setSelectedAccounts([]);
-      setProjectedGrowth("");
       onOpenChange(false);
     }
   };
@@ -49,7 +47,7 @@ export const CreateGroupDialog = ({ isOpen, onOpenChange, onCreateGroup }: Creat
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create New Account Group</DialogTitle>
+          <DialogTitle>Create New Forecast Group</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div>
@@ -58,15 +56,6 @@ export const CreateGroupDialog = ({ isOpen, onOpenChange, onCreateGroup }: Creat
               value={newGroupName}
               onChange={(e) => setNewGroupName(e.target.value)}
               placeholder="Enter group name"
-            />
-          </div>
-          <div>
-            <Label>Projected Growth (%)</Label>
-            <Input
-              type="number"
-              value={projectedGrowth}
-              onChange={(e) => setProjectedGrowth(e.target.value)}
-              placeholder="Enter projected growth percentage"
             />
           </div>
           <div>
