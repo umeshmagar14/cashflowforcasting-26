@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -26,9 +27,9 @@ interface CreateGroupDialogProps {
 }
 
 export const CreateGroupDialog = ({ isOpen, onOpenChange, onCreateGroup }: CreateGroupDialogProps) => {
-  const [newGroupName, setNewGroupName] = React.useState("");
-  const [selectedAccounts, setSelectedAccounts] = React.useState<string[]>([]);
-  const [projectedGrowth, setProjectedGrowth] = React.useState("");
+  const [newGroupName, setNewGroupName] = useState("");
+  const [selectedAccounts, setSelectedAccounts] = useState<string[]>([]);
+  const [projectedGrowth, setProjectedGrowth] = useState("");
 
   const handleCreateGroup = () => {
     if (newGroupName && selectedAccounts.length > 0) {
