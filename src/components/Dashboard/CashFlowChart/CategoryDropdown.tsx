@@ -24,9 +24,6 @@ export const CategoryDropdown = ({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Categories</SelectItem>
-          <SelectItem value="group1">Group 1</SelectItem>
-          <SelectItem value="group2">Group 2</SelectItem>
-          <SelectItem value="group3">Group 3</SelectItem>
           {accountGroups.map((group) => (
             <SelectItem key={group.id} value={group.id}>
               {group.name}
@@ -34,14 +31,16 @@ export const CategoryDropdown = ({
           ))}
         </SelectContent>
       </Select>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={onEditClick}
-        className="h-10 w-10"
-      >
-        <Edit className="h-4 w-4" />
-      </Button>
+      {selectedCategory !== 'all' && (
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onEditClick}
+          className="h-10 w-10"
+        >
+          <Edit className="h-4 w-4" />
+        </Button>
+      )}
     </div>
   );
 };

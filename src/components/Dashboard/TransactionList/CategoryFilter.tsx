@@ -16,9 +16,6 @@ export const CategoryFilter = ({ selectedCategory, onCategoryChange, accountGrou
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Categories</SelectItem>
-          <SelectItem value="group1">Group 1</SelectItem>
-          <SelectItem value="group2">Group 2</SelectItem>
-          <SelectItem value="group3">Group 3</SelectItem>
           {accountGroups.map((group) => (
             <SelectItem key={group.id} value={group.id}>
               {group.name}
