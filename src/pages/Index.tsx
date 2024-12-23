@@ -8,6 +8,7 @@ import { ForecastControls } from "@/components/Dashboard/ForecastControls";
 import { Navbar } from "@/components/Navbar/Navbar";
 import { TransactionDialog } from "@/components/Dashboard/TransactionManagement/TransactionDialog";
 import { useState } from "react";
+import { AccountGroup } from "@/types/accountTypes";
 
 const mockHierarchicalData = {
   id: "corp1",
@@ -83,7 +84,7 @@ const Index = () => {
                 accounts={mockAccounts}
               />
               {view === "chart" ? (
-                <CashFlowChart accountGroups={accountGroups} onGroupsChange={setAccountGroups} />
+                <CashFlowChart />
               ) : (
                 <CashFlowTable accountGroups={accountGroups} />
               )}
@@ -95,7 +96,7 @@ const Index = () => {
               <CardTitle>Upcoming Transactions Across Entities</CardTitle>
             </CardHeader>
             <CardContent>
-              <TransactionsTable accountGroups={accountGroups} />
+              <TransactionsTable />
             </CardContent>
           </Card>
         </div>

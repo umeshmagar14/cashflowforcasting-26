@@ -8,10 +8,14 @@ import { AccountGroup } from "@/types/accountTypes";
 import { CreateGroupDialog } from "./AccountGroups/CreateGroupDialog";
 import { GroupsList } from "./AccountGroups/GroupsList";
 
-export const CashFlowChart = () => {
+interface CashFlowChartProps {
+  accountGroups?: AccountGroup[];
+  onGroupsChange?: (groups: AccountGroup[]) => void;
+}
+
+export const CashFlowChart = ({ accountGroups = [], onGroupsChange }: CashFlowChartProps) => {
   const { transactions } = useTransactionStore();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [accountGroups, setAccountGroups] = useState<AccountGroup[]>([]);
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
 
   const handleCreateGroup = (groupData: {
@@ -25,7 +29,8 @@ export const CashFlowChart = () => {
       accountIds: groupData.accountIds,
       projectedGrowth: groupData.projectedGrowth,
     };
-    setAccountGroups([...accountGroups, newGroup]);
+    const updatedGroups = [...accountGroups, newGroup];
+    onGroupsChange?.(updatedGroups);
   };
 
   const chartData = useMemo(() => {
@@ -127,6 +132,11 @@ export const CashFlowChart = () => {
               <SelectItem value="group1">Group 1</SelectItem>
               <SelectItem value="group2">Group 2</SelectItem>
               <SelectItem value="group3">Group 3</SelectItem>
+              {accountGroups.map((group) => (
+                <SelectItem key={group.id} value={group.id}>
+                  {group.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
