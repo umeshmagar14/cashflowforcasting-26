@@ -66,6 +66,7 @@ const Index = () => {
             selectedEntityId={selectedEntityId}
             onEntityChange={setSelectedEntityId}
             rootEntity={mockHierarchicalData.rootEntity}
+            accountGroups={accountGroups}
           />
 
           <MetricsOverview />
