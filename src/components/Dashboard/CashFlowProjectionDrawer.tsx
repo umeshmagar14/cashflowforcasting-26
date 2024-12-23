@@ -14,6 +14,7 @@ import { AccountSelection } from "./CashFlowProjection/AccountSelection";
 import { ProjectionForm } from "./CashFlowProjection/ProjectionForm";
 import { ProjectionDrawerTrigger } from "./CashFlowProjection/ProjectionDrawerTrigger";
 import { useProjectionForm } from "./CashFlowProjection/useProjectionForm";
+import { AccountGroup } from "@/types/accountTypes";
 
 interface Account {
   id: string;
@@ -30,7 +31,11 @@ const mockAccounts: Account[] = [
   { id: "acc6", name: "Strategic Reserve", type: 'reserve' },
 ];
 
-export const CashFlowProjectionDrawer = () => {
+interface CashFlowProjectionDrawerProps {
+  accountGroups: AccountGroup[];
+}
+
+export const CashFlowProjectionDrawer = ({ accountGroups }: CashFlowProjectionDrawerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const {
     date,
@@ -94,6 +99,7 @@ export const CashFlowProjectionDrawer = () => {
               setDescription={setDescription}
               accountCategory={accountCategory}
               setAccountCategory={setAccountCategory}
+              accountGroups={accountGroups}
             />
 
             <SheetFooter>

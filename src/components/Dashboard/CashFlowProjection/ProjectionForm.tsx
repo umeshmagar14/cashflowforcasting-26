@@ -6,12 +6,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { AccountGroup } from "@/types/accountTypes";
 
 interface ProjectionFormProps {
   date: Date | undefined;
@@ -24,6 +25,7 @@ interface ProjectionFormProps {
   setDescription: (description: string) => void;
   accountCategory: string;
   setAccountCategory: (category: string) => void;
+  accountGroups: AccountGroup[];
 }
 
 export const ProjectionForm = ({
@@ -37,11 +39,8 @@ export const ProjectionForm = ({
   setDescription,
   accountCategory,
   setAccountCategory,
+  accountGroups,
 }: ProjectionFormProps) => {
-  const today = new Date();
-  const futureDate = new Date();
-  futureDate.setFullYear(today.getFullYear() + 1);
-
   return (
     <>
       <div className="space-y-2">
@@ -64,9 +63,15 @@ export const ProjectionForm = ({
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent className="bg-white">
-            <SelectItem value="group1" className="bg-white hover:bg-gray-100">Group 1</SelectItem>
-            <SelectItem value="group2" className="bg-white hover:bg-gray-100">Group 2</SelectItem>
-            <SelectItem value="group3" className="bg-white hover:bg-gray-100">Group 3</SelectItem>
+            {accountGroups.map((group) => (
+              <SelectItem 
+                key={group.id} 
+                value={group.id}
+                className="bg-white hover:bg-gray-100"
+              >
+                {group.name}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -91,11 +96,6 @@ export const ProjectionForm = ({
               mode="single"
               selected={date}
               onSelect={setDate}
-              disabled={(date) => {
-                const currentDate = new Date();
-                currentDate.setHours(0, 0, 0, 0);
-                return date < currentDate;
-              }}
               initialFocus
               className="bg-white rounded-md border"
             />
