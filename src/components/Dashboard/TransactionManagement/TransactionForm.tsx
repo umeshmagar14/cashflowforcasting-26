@@ -9,18 +9,28 @@ import {
 } from "@/components/ui/select";
 import { useState } from "react";
 
+const dummyAccounts = [
+  { id: "acc1", accountNumber: "1001-2345", name: "Operating Account" },
+  { id: "acc2", accountNumber: "1001-3456", name: "Payroll Account" },
+  { id: "acc3", accountNumber: "1001-4567", name: "Marketing Budget" },
+  { id: "acc4", accountNumber: "1001-5678", name: "Investment Account" },
+  { id: "acc5", accountNumber: "1001-6789", name: "Reserve Fund" },
+];
+
 interface TransactionFormProps {
   onSubmit: (data: {
     date: string;
     amount: string;
     type: "receivable" | "payable";
     description: string;
+    accountId: string;
   }) => void;
   initialData?: {
     date: string;
     amount: string;
     type: "receivable" | "payable";
     description: string;
+    accountId: string;
   };
   onCancel?: () => void;
 }
@@ -30,10 +40,11 @@ export const TransactionForm = ({ onSubmit, initialData, onCancel }: Transaction
   const [type, setType] = useState<"receivable" | "payable">(initialData?.type || "receivable");
   const [description, setDescription] = useState(initialData?.description || "");
   const [date, setDate] = useState(initialData?.date || "");
+  const [selectedAccount, setSelectedAccount] = useState(initialData?.accountId || "");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ date, amount, type, description });
+    onSubmit({ date, amount, type, description, accountId: selectedAccount });
   };
 
   return (
@@ -50,6 +61,23 @@ export const TransactionForm = ({ onSubmit, initialData, onCancel }: Transaction
           className="col-span-3"
           required
         />
+      </div>
+      <div className="grid grid-cols-4 items-center gap-4">
+        <label htmlFor="account" className="text-right">
+          Account
+        </label>
+        <Select value={selectedAccount} onValueChange={setSelectedAccount} required>
+          <SelectTrigger className="col-span-3">
+            <SelectValue placeholder="Select account" />
+          </SelectTrigger>
+          <SelectContent>
+            {dummyAccounts.map((account) => (
+              <SelectItem key={account.id} value={account.id}>
+                {account.accountNumber} - {account.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="grid grid-cols-4 items-center gap-4">
         <label htmlFor="amount" className="text-right">

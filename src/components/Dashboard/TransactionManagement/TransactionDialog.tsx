@@ -7,7 +7,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useTransactionStore } from "@/store/transactionStore";
 import { TransactionForm } from "./TransactionForm";
@@ -21,7 +20,6 @@ export const TransactionDialog = () => {
       ...data,
       amount: Number(data.amount),
       entityId: "root1", // Default values for demo
-      accountId: "acc1"
     };
     
     addTransaction(transactionData);
