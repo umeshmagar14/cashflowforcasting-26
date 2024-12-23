@@ -84,7 +84,10 @@ const Index = () => {
                 accounts={mockAccounts}
               />
               {view === "chart" ? (
-                <CashFlowChart />
+                <CashFlowChart 
+                  accountGroups={accountGroups} 
+                  onGroupsChange={setAccountGroups} 
+                />
               ) : (
                 <CashFlowTable accountGroups={accountGroups} />
               )}
@@ -96,7 +99,7 @@ const Index = () => {
               <CardTitle>Upcoming Transactions Across Entities</CardTitle>
             </CardHeader>
             <CardContent>
-              <TransactionsTable />
+              <TransactionsTable accountGroups={accountGroups} />
             </CardContent>
           </Card>
         </div>

@@ -1,12 +1,13 @@
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useTransactionStore } from "@/store/transactionStore";
 import { useMemo, useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { AccountGroup } from "@/types/accountTypes";
 import { CreateGroupDialog } from "./AccountGroups/CreateGroupDialog";
 import { GroupsList } from "./AccountGroups/GroupsList";
+import { CategoryDropdown } from "./CashFlowChart/CategoryDropdown";
+import { EditGroupDialog } from "./CashFlowChart/EditGroupDialog";
 
 interface CashFlowChartProps {
   accountGroups?: AccountGroup[];
@@ -17,6 +18,8 @@ export const CashFlowChart = ({ accountGroups = [], onGroupsChange }: CashFlowCh
   const { transactions } = useTransactionStore();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
+  const [isEditGroupOpen, setIsEditGroupOpen] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<AccountGroup | null>(null);
 
   const handleCreateGroup = (groupData: {
     name: string;
@@ -30,6 +33,21 @@ export const CashFlowChart = ({ accountGroups = [], onGroupsChange }: CashFlowCh
       projectedGrowth: groupData.projectedGrowth,
     };
     const updatedGroups = [...accountGroups, newGroup];
+    onGroupsChange?.(updatedGroups);
+  };
+
+  const handleEditClick = () => {
+    const group = accountGroups.find(g => g.id === selectedCategory);
+    if (group) {
+      setSelectedGroup(group);
+      setIsEditGroupOpen(true);
+    }
+  };
+
+  const handleEditGroup = (updatedGroup: AccountGroup) => {
+    const updatedGroups = accountGroups.map(group =>
+      group.id === updatedGroup.id ? updatedGroup : group
+    );
     onGroupsChange?.(updatedGroups);
   };
 
@@ -122,24 +140,12 @@ export const CashFlowChart = ({ accountGroups = [], onGroupsChange }: CashFlowCh
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <div className="w-48">
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="bg-white">
-              <SelectValue placeholder="Filter by category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="group1">Group 1</SelectItem>
-              <SelectItem value="group2">Group 2</SelectItem>
-              <SelectItem value="group3">Group 3</SelectItem>
-              {accountGroups.map((group) => (
-                <SelectItem key={group.id} value={group.id}>
-                  {group.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        <CategoryDropdown
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          accountGroups={accountGroups}
+          onEditClick={handleEditClick}
+        />
 
         <Button
           variant="outline"
@@ -207,6 +213,13 @@ export const CashFlowChart = ({ accountGroups = [], onGroupsChange }: CashFlowCh
         isOpen={isCreateGroupOpen}
         onOpenChange={setIsCreateGroupOpen}
         onCreateGroup={handleCreateGroup}
+      />
+
+      <EditGroupDialog
+        isOpen={isEditGroupOpen}
+        onOpenChange={setIsEditGroupOpen}
+        selectedGroup={selectedGroup}
+        onSave={handleEditGroup}
       />
 
       <GroupsList groups={accountGroups} />
