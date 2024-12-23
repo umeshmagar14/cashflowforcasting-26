@@ -19,11 +19,11 @@ export const CategoryDropdown = ({
   return (
     <div className="flex items-center gap-2">
       <Select value={selectedCategory} onValueChange={onCategoryChange}>
-        <SelectTrigger className="bg-white w-48">
+        <SelectTrigger className="w-[200px] bg-dropdown">
           <SelectValue placeholder="Filter by category" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Categories</SelectItem>
+          <SelectItem value="all" className="font-medium">All Categories</SelectItem>
           {accountGroups.map((group) => (
             <SelectItem key={group.id} value={group.id}>
               {group.name}

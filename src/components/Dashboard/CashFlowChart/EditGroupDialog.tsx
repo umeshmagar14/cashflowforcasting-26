@@ -35,9 +35,6 @@ export const EditGroupDialog = ({
   onSave,
 }: EditGroupDialogProps) => {
   const [name, setName] = useState(selectedGroup?.name || "");
-  const [projectedGrowth, setProjectedGrowth] = useState(
-    selectedGroup?.projectedGrowth?.toString() || "0"
-  );
   const [selectedAccounts, setSelectedAccounts] = useState<string[]>(
     selectedGroup?.accountIds || []
   );
@@ -45,7 +42,6 @@ export const EditGroupDialog = ({
   useEffect(() => {
     if (selectedGroup) {
       setName(selectedGroup.name);
-      setProjectedGrowth(selectedGroup.projectedGrowth?.toString() || "0");
       setSelectedAccounts(selectedGroup.accountIds);
     }
   }, [selectedGroup]);
@@ -57,7 +53,7 @@ export const EditGroupDialog = ({
       ...selectedGroup,
       name,
       accountIds: selectedAccounts,
-      projectedGrowth: parseFloat(projectedGrowth) || 0,
+      projectedGrowth: selectedGroup.projectedGrowth || 0,
     });
     onOpenChange(false);
   };
@@ -75,15 +71,6 @@ export const EditGroupDialog = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter group name"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Projected Growth (%)</Label>
-            <Input
-              type="number"
-              value={projectedGrowth}
-              onChange={(e) => setProjectedGrowth(e.target.value)}
-              placeholder="Enter projected growth"
             />
           </div>
           <div>
