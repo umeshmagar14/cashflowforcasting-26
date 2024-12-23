@@ -54,6 +54,7 @@ const Index = () => {
   const [selectedEntityId, setSelectedEntityId] = useState(mockHierarchicalData.rootEntity.id);
   const [view, setView] = useState<"chart" | "table">("chart");
   const [selectedAccounts, setSelectedAccounts] = useState<string[]>([mockAccounts[0].id]);
+  const [accountGroups, setAccountGroups] = useState<AccountGroup[]>([]);
 
   return (
     <>
@@ -81,7 +82,11 @@ const Index = () => {
                 onAccountsChange={setSelectedAccounts}
                 accounts={mockAccounts}
               />
-              {view === "chart" ? <CashFlowChart /> : <CashFlowTable />}
+              {view === "chart" ? (
+                <CashFlowChart accountGroups={accountGroups} onGroupsChange={setAccountGroups} />
+              ) : (
+                <CashFlowTable accountGroups={accountGroups} />
+              )}
             </CardContent>
           </Card>
 
@@ -90,7 +95,7 @@ const Index = () => {
               <CardTitle>Upcoming Transactions Across Entities</CardTitle>
             </CardHeader>
             <CardContent>
-              <TransactionsTable />
+              <TransactionsTable accountGroups={accountGroups} />
             </CardContent>
           </Card>
         </div>

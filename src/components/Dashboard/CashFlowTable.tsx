@@ -2,16 +2,35 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useTransactionStore } from "@/store/transactionStore";
 import { useMemo, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AccountGroup } from "@/types/accountTypes";
 
-export const CashFlowTable = () => {
+interface CashFlowTableProps {
+  accountGroups: AccountGroup[];
+}
+
+export const CashFlowTable = ({ accountGroups }: CashFlowTableProps) => {
   const { transactions } = useTransactionStore();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const tableData = useMemo(() => {
     // Filter transactions by category and active status
-    const filteredTransactions = transactions.filter(t => 
-      t.isActive && (selectedCategory === "all" || t.accountCategory === selectedCategory)
-    );
+    const filteredTransactions = transactions.filter(t => {
+      if (!t.isActive) return false;
+      if (selectedCategory === "all") return true;
+      
+      // Check if selected category is a predefined group
+      if (["group1", "group2", "group3"].includes(selectedCategory)) {
+        return t.accountCategory === selectedCategory;
+      }
+      
+      // Check if selected category is a custom group
+      const selectedGroup = accountGroups.find(group => group.id === selectedCategory);
+      if (selectedGroup) {
+        return selectedGroup.accountIds.includes(t.accountId);
+      }
+      
+      return false;
+    });
     
     // Group transactions by month and calculate actual values
     const monthlyData = filteredTransactions.reduce((acc: Record<string, number>, transaction) => {
@@ -30,7 +49,7 @@ export const CashFlowTable = () => {
       { date: "2024-05", actual: monthlyData["2024-05"] || null, forecast: 3800, confidence_high: 4200, confidence_low: 3400 },
       { date: "2024-06", actual: monthlyData["2024-06"] || null, forecast: 4200, confidence_high: 4600, confidence_low: 3800 },
     ];
-  }, [transactions, selectedCategory]);
+  }, [transactions, selectedCategory, accountGroups]);
 
   return (
     <div className="w-full space-y-4">
@@ -45,6 +64,11 @@ export const CashFlowTable = () => {
               <SelectItem value="group1">Group 1</SelectItem>
               <SelectItem value="group2">Group 2</SelectItem>
               <SelectItem value="group3">Group 3</SelectItem>
+              {accountGroups.map((group) => (
+                <SelectItem key={group.id} value={group.id}>
+                  {group.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

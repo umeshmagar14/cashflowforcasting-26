@@ -97,6 +97,7 @@ export const TransactionsTable = () => {
         <CategoryFilter 
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
+          accountGroups={[]} // This will be populated from the parent component
         />
       </div>
 
