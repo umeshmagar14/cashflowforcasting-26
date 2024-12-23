@@ -4,6 +4,11 @@ import { TransactionFilters } from "./TransactionList/TransactionFilters";
 import { TransactionListItem } from "./TransactionList/TransactionListItem";
 import { CategoryFilter } from "./TransactionList/CategoryFilter";
 import { useTransactionFilters } from "./TransactionList/useTransactionFilters";
+import { AccountGroup } from "@/types/accountTypes";
+
+interface TransactionsTableProps {
+  accountGroups: AccountGroup[];
+}
 
 const mockHierarchicalData = {
   id: "corp1",
@@ -41,7 +46,7 @@ const mockHierarchicalData = {
   }
 };
 
-export const TransactionsTable = () => {
+export const TransactionsTable = ({ accountGroups }: TransactionsTableProps) => {
   const { transactions, toggleTransactionStatus } = useTransactionStore();
   const {
     filters,
@@ -97,7 +102,7 @@ export const TransactionsTable = () => {
         <CategoryFilter 
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
-          accountGroups={[]} // This will be populated from the parent component
+          accountGroups={accountGroups}
         />
       </div>
 
