@@ -33,8 +33,6 @@ export const ForecastDownloadOptions = ({ data }: DownloadOptionsProps) => {
   };
 
   const downloadPDF = () => {
-    // For PDF generation, we'll use browser's print functionality
-    // You might want to replace this with a proper PDF library later
     const printWindow = window.open('', '', 'height=600,width=800');
     if (!printWindow) return;
 
@@ -52,7 +50,7 @@ export const ForecastDownloadOptions = ({ data }: DownloadOptionsProps) => {
           <h1>Forecast Report</h1>
           <table>
             <thead>
-              <tr>${Object.keys(data[0]).map(key => `<th>${key}</th>`).join('')}</tr>
+              <tr>${Object.keys(data[0] || {}).map(key => `<th>${key}</th>`).join('')}</tr>
             </thead>
             <tbody>
               ${data.map(row => `
@@ -72,19 +70,19 @@ export const ForecastDownloadOptions = ({ data }: DownloadOptionsProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
+        <Button variant="outline" size="sm" className="gap-2 bg-white hover:bg-gray-50">
           <Download className="h-4 w-4" />
           Download
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem onClick={downloadCSV}>
+      <DropdownMenuContent align="end" className="w-48 bg-white">
+        <DropdownMenuItem onClick={downloadCSV} className="cursor-pointer">
           Download CSV
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={downloadExcel}>
+        <DropdownMenuItem onClick={downloadExcel} className="cursor-pointer">
           Download Excel
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={downloadPDF}>
+        <DropdownMenuItem onClick={downloadPDF} className="cursor-pointer">
           Download PDF
         </DropdownMenuItem>
       </DropdownMenuContent>

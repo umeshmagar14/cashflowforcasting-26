@@ -50,8 +50,9 @@ export const ForecastControls = ({
           </Toggle>
         ))}
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center space-x-2">
         <ForecastDownloadOptions data={data} />
+        <div className="border-l h-6 mx-2 border-gray-200" />
         <ToggleGroup type="single" value={view} onValueChange={(v) => v && onViewChange(v as "chart" | "table")}>
           <ToggleGroupItem value="chart" aria-label="Show chart view">
             <BarChart3Icon className="h-4 w-4" />
