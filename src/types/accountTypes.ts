@@ -20,3 +20,10 @@ export interface Corporate {
   type: 'corporate' | 'sme';
   rootEntity: Entity;
 }
+
+export interface AccountGroup {
+  id: string;
+  name: string;
+  accountIds: string[];
+  projectedGrowth?: number;
+}
