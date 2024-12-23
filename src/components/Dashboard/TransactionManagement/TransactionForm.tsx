@@ -67,12 +67,12 @@ export const TransactionForm = ({ onSubmit, initialData, onCancel }: Transaction
           Account
         </label>
         <Select value={selectedAccount} onValueChange={setSelectedAccount} required>
-          <SelectTrigger className="col-span-3">
+          <SelectTrigger className="col-span-3 bg-dropdown">
             <SelectValue placeholder="Select account" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-white">
             {dummyAccounts.map((account) => (
-              <SelectItem key={account.id} value={account.id}>
+              <SelectItem key={account.id} value={account.id} className="bg-white hover:bg-gray-100">
                 {account.accountNumber} - {account.name}
               </SelectItem>
             ))}
@@ -97,12 +97,12 @@ export const TransactionForm = ({ onSubmit, initialData, onCancel }: Transaction
           Type
         </label>
         <Select value={type} onValueChange={(value: "payable" | "receivable") => setType(value)}>
-          <SelectTrigger className="col-span-3">
+          <SelectTrigger className="col-span-3 bg-dropdown">
             <SelectValue placeholder="Select type" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="receivable">Receivable</SelectItem>
-            <SelectItem value="payable">Payable</SelectItem>
+          <SelectContent className="bg-white">
+            <SelectItem value="receivable" className="bg-white hover:bg-gray-100">Receivable</SelectItem>
+            <SelectItem value="payable" className="bg-white hover:bg-gray-100">Payable</SelectItem>
           </SelectContent>
         </Select>
       </div>
