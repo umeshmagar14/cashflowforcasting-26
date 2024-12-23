@@ -22,10 +22,10 @@ export const CategoryDropdown = ({
         <SelectTrigger className="w-[200px] bg-dropdown">
           <SelectValue placeholder="Filter by category" />
         </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all" className="font-medium">All Categories</SelectItem>
+        <SelectContent className="bg-white">
+          <SelectItem value="all" className="font-medium bg-white hover:bg-gray-100">All Categories</SelectItem>
           {accountGroups.map((group) => (
-            <SelectItem key={group.id} value={group.id}>
+            <SelectItem key={group.id} value={group.id} className="bg-white hover:bg-gray-100">
               {group.name}
             </SelectItem>
           ))}
